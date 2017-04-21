@@ -24,22 +24,21 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  *
  * @author markus
  */
-public class NewJFrame extends javax.swing.JFrame
-{
-    
+public class NewJFrame extends javax.swing.JFrame implements Runnable {
+
     private boolean fileChoosen;
     private GregorLogik gregLogik;
     private String absolutePathCSV;
+    private boolean run;
 
     /**
      * Creates new form NewJFrame
      */
-    public NewJFrame()
-    {
+    public NewJFrame() {
         initComponents();
         this.fileChoosen = false;
         this.gregLogik = new GregorLogik();
-        
+
         FileNameExtensionFilter filter = new FileNameExtensionFilter("CSV", "csv");
         this.fileChooser.setFileFilter(filter);
         this.fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
@@ -144,15 +143,14 @@ public class NewJFrame extends javax.swing.JFrame
 
     private void openFileButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_openFileButtonActionPerformed
         int returnVal = fileChooser.showOpenDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION)
-        {
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
-            
+
             this.absolutePathCSV = file.getAbsolutePath();
-            
+
             this.showPath.setText(
                     this.absolutePathCSV);
-            
+
             this.pack();
             this.fileChoosen = true;
             this.output.setText("");
@@ -160,67 +158,87 @@ public class NewJFrame extends javax.swing.JFrame
         }
     }//GEN-LAST:event_openFileButtonActionPerformed
 
+    public void setResult(String result) {
+        this.run = false;
+         this.error.setText("Fertig!");
+        this.output.setText(result);
+    }
+
+    @Override
+    public void run() {
+
+        while (this.run) {
+            try {
+                if(this.run)
+                this.error.setText("rechnet");
+                Thread.sleep(1000);
+                if(this.run)
+                this.error.setText("rechnet.");
+                Thread.sleep(1000);
+                if(this.run)
+                this.error.setText("rechnet..");
+                Thread.sleep(1000);
+                if(this.run)
+                this.error.setText("rechnet...");
+                Thread.sleep(1000);
+            } catch (Exception e) {
+            }
+
+           
+        }
+    }
+
     private void suggestionsActionPerformed(ActionEvent evt)//GEN-FIRST:event_suggestionsActionPerformed
     {//GEN-HEADEREND:event_suggestionsActionPerformed
-        if (this.fileChoosen)
-        {
-          
-            this.output.setText(
-                    this.gregLogik.run(this.showPath.getText())
-            );
-            
-        } else
-        {
+        if (this.fileChoosen) {
+            this.output.setText("");
+            this.gregLogik.setPath(this.showPath.getText(), this);
+            new Thread(this.gregLogik).start();
+            this.run = true;
+            new Thread(this).start();
+
+        } else {
             this.error.setText("Es wurde keine Datei ausgewählt!");
         }
+
     }//GEN-LAST:event_suggestionsActionPerformed
 
     private void formComponentResized(ComponentEvent evt)//GEN-FIRST:event_formComponentResized
     {//GEN-HEADEREND:event_formComponentResized
-        
+
 
     }//GEN-LAST:event_formComponentResized
 
     /**
      * @param args the command line arguments ////
      */
-    public static void main(String args[])
-    {
+    public static void main(String args[]) {
         /* Set the Dracula look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
-        try
-        {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels())
-            {
-                if ("Dracula".equals(info.getName()))
-                {
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Dracula".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex)
-        {
+        } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex)
-        {
+        } catch (InstantiationException ex) {
             java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex)
-        {
+        } catch (IllegalAccessException ex) {
             java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex)
-        {
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable()
-        {
-            public void run()
-            {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
                 new NewJFrame().setVisible(true);
             }
         });
@@ -236,4 +254,5 @@ public class NewJFrame extends javax.swing.JFrame
     private JLabel showPath;
     private JButton suggestions;
     // End of variables declaration//GEN-END:variables
+
 }
