@@ -264,8 +264,7 @@ public class Lagerverwaltung
         @Override
         public String toString()
         {
-            return "Von: " + this.von.name + " Item: " + this.item.getName()
-                    + " Anzahl: " + this.anzahl + " Nach: " + this.nach.name;
+            return "Von: " + this.von.name + "  Name: " + this.item.name+"  Beschreibung: "+this.item.beschreibung+"  EAN: "+this.item.ean + "  Anzahl: " + this.anzahl + "  Nach: " + this.nach.name;
         }
 
         @Override

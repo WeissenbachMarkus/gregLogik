@@ -46,10 +46,6 @@ public class ReadFile
 
                 String[] itemsAndStock = line.split(this.csvSplitBy);
 
-                /*   Arrays.asList(itemsAndStock).forEach((t) -> {
-                 System.out.print(";" + t);
-                 });            
-                 System.out.println("");*/
                 csvFile.add(itemsAndStock);
             }
 

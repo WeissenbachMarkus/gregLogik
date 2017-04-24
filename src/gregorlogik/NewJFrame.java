@@ -9,22 +9,30 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.File;
+import java.text.NumberFormat;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.LayoutStyle;
 import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.NumberFormatter;
 
 /**
  *
  * @author markus
  */
-public class NewJFrame extends javax.swing.JFrame implements Runnable {
+public class NewJFrame extends javax.swing.JFrame implements Runnable
+{
 
     private boolean fileChoosen;
     private GregorLogik gregLogik;
@@ -34,7 +42,8 @@ public class NewJFrame extends javax.swing.JFrame implements Runnable {
     /**
      * Creates new form NewJFrame
      */
-    public NewJFrame() {
+    public NewJFrame()
+    {
         initComponents();
         this.fileChoosen = false;
         this.gregLogik = new GregorLogik();
@@ -42,6 +51,7 @@ public class NewJFrame extends javax.swing.JFrame implements Runnable {
         FileNameExtensionFilter filter = new FileNameExtensionFilter("CSV", "csv");
         this.fileChooser.setFileFilter(filter);
         this.fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+
     }
 
     /**
@@ -62,6 +72,9 @@ public class NewJFrame extends javax.swing.JFrame implements Runnable {
         showPath = new JLabel();
         suggestions = new JButton();
         error = new JLabel();
+        jLabel1 = new JLabel();
+        jLabel2 = new JLabel();
+        number = new JFormattedTextField();
 
         fileChooser.setDialogTitle("This is my open dialog");
 
@@ -101,24 +114,46 @@ public class NewJFrame extends javax.swing.JFrame implements Runnable {
             }
         });
 
+        jLabel1.setText("Anzeigen ab");
+
+        jLabel2.setText("Umschichtungen.");
+
+        number.setText("1");
+        number.addKeyListener(new KeyAdapter()
+        {
+            public void keyTyped(KeyEvent evt)
+            {
+                numberKeyTyped(evt);
+            }
+        });
+
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addGap(22, 22, 22)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(error, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
-                        .addComponent(suggestions))
-                    .addComponent(jScrollPane1, GroupLayout.Alignment.LEADING)
-                    .addGroup(GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(labelCsvPath)
-                        .addGap(18, 18, 18)
-                        .addComponent(showPath, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addComponent(openFileButton)))
-                .addGap(29, 29, 29))
+                        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(number, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(178, 178, 178)
+                                .addComponent(suggestions))
+                            .addComponent(jScrollPane1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(labelCsvPath)
+                                .addGap(18, 18, 18)
+                                .addComponent(showPath, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
+                                .addComponent(openFileButton)))
+                        .addGap(29, 29, 29))))
         );
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -128,22 +163,25 @@ public class NewJFrame extends javax.swing.JFrame implements Runnable {
                     .addComponent(openFileButton)
                     .addComponent(showPath))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(suggestions)
-                    .addComponent(error))
-                .addGap(12, 12, 12))
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
+                    .addComponent(number, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(error, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15))
         );
-
-        getAccessibleContext().setAccessibleName("Lagerausgleich");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void openFileButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_openFileButtonActionPerformed
         int returnVal = fileChooser.showOpenDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
+        if (returnVal == JFileChooser.APPROVE_OPTION)
+        {
             File file = fileChooser.getSelectedFile();
 
             this.absolutePathCSV = file.getAbsolutePath();
@@ -158,46 +196,61 @@ public class NewJFrame extends javax.swing.JFrame implements Runnable {
         }
     }//GEN-LAST:event_openFileButtonActionPerformed
 
-    public void setResult(String result) {
+    public void setResult(String result)
+    {
         this.run = false;
-         this.error.setText("Fertig!");
+        this.error.setText("Fertig!");
         this.output.setText(result);
     }
 
     @Override
-    public void run() {
+    public void run()
+    {
 
-        while (this.run) {
-            try {
-                if(this.run)
-                this.error.setText("rechnet");
+        while (this.run)
+        {
+            try
+            {
+                if (this.run)
+                {
+                    this.error.setText("rechnet");
+                }
                 Thread.sleep(1000);
-                if(this.run)
-                this.error.setText("rechnet.");
+                if (this.run)
+                {
+                    this.error.setText("rechnet.");
+                }
                 Thread.sleep(1000);
-                if(this.run)
-                this.error.setText("rechnet..");
+                if (this.run)
+                {
+                    this.error.setText("rechnet..");
+                }
                 Thread.sleep(1000);
-                if(this.run)
-                this.error.setText("rechnet...");
+                if (this.run)
+                {
+                    this.error.setText("rechnet...");
+                }
                 Thread.sleep(1000);
-            } catch (Exception e) {
+            } catch (Exception e)
+            {
             }
 
-           
         }
     }
 
     private void suggestionsActionPerformed(ActionEvent evt)//GEN-FIRST:event_suggestionsActionPerformed
     {//GEN-HEADEREND:event_suggestionsActionPerformed
-        if (this.fileChoosen) {
+        if (this.fileChoosen)
+        {
             this.output.setText("");
             this.gregLogik.setPath(this.showPath.getText(), this);
+            this.gregLogik.setNumber(this.number.getText());
             new Thread(this.gregLogik).start();
             this.run = true;
             new Thread(this).start();
 
-        } else {
+        } else
+        {
             this.error.setText("Es wurde keine Datei ausgewählt!");
         }
 
@@ -209,36 +262,62 @@ public class NewJFrame extends javax.swing.JFrame implements Runnable {
 
     }//GEN-LAST:event_formComponentResized
 
+    private void numberKeyTyped(KeyEvent evt)//GEN-FIRST:event_numberKeyTyped
+    {//GEN-HEADEREND:event_numberKeyTyped
+        char enter = evt.getKeyChar();
+        if (!(Character.isDigit(enter)))
+        {
+            evt.consume();
+            error.setText("Bitte nur Zahlen.");
+        } else if (error.getText().length() > 0)
+        {
+            error.setText("");
+        }
+
+        this.pack();
+
+    }//GEN-LAST:event_numberKeyTyped
+
     /**
      * @param args the command line arguments ////
      */
-    public static void main(String args[]) {
+    public static void main(String args[])
+    {
         /* Set the Dracula look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Dracula".equals(info.getName())) {
+        try
+        {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels())
+            {
+                if ("Dracula".equals(info.getName()))
+                {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
+        } catch (ClassNotFoundException ex)
+        {
             java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
+        } catch (InstantiationException ex)
+        {
             java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
+        } catch (IllegalAccessException ex)
+        {
             java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (javax.swing.UnsupportedLookAndFeelException ex)
+        {
             java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
+        java.awt.EventQueue.invokeLater(new Runnable()
+        {
+            public void run()
+            {
                 new NewJFrame().setVisible(true);
             }
         });
@@ -247,8 +326,11 @@ public class NewJFrame extends javax.swing.JFrame implements Runnable {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JLabel error;
     private JFileChooser fileChooser;
+    private JLabel jLabel1;
+    private JLabel jLabel2;
     private JScrollPane jScrollPane1;
     private JLabel labelCsvPath;
+    private JFormattedTextField number;
     private JButton openFileButton;
     private JTextArea output;
     private JLabel showPath;

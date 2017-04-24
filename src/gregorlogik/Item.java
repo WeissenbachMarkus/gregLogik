@@ -12,7 +12,7 @@ package gregorlogik;
 public class Item
 {
 
-    private String ean, artikelnummer, name, beschreibung, verkaufspreis;
+    public String ean, artikelnummer, name, beschreibung, verkaufspreis;
 
     public Item(String ean, String artikelnummer, String name, String beschreibung, String verkaufspreis)
     {
@@ -31,7 +31,7 @@ public class Item
     @Override
     public String toString()
     {
-        return this.name.toString();
+        return "Name: "+this.name+ " Beschreibung: "+this.beschreibung+ " EAN:"+this.ean;
     }
 
 }
