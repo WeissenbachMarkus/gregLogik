@@ -5,13 +5,10 @@
  */
 package gregorlogik;
 
-import gregorlogik.Lagerverwaltung.LagerItemAnzahl;
-import gregorlogik.Lagerverwaltung.LagerItemAnzahlLager;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.stream.Collectors;
-import javax.swing.JFrame;
+
 
 /**
  *
@@ -20,63 +17,9 @@ import javax.swing.JFrame;
 public class GregorLogik implements Runnable
 {
 
-    public String path;
-    public NewJFrame frame;
+    private String path;
+    private NewJFrame frame;
     private int number;
-
-    static ArrayList<LagerItemAnzahlLager> list;
-
-    public static HashMap<Item, Integer> generiereAuftrag(int anzahlVerschiedenerItems, int anzahl)
-    {
-        HashMap<Item, Integer> auftrag = new HashMap<>();
-        ItemName[] itemNames = ItemName.values();
-
-        for (int i = 0; i < anzahlVerschiedenerItems; i++)
-        {
-            //   auftrag.put(new Item(itemNames[i].toString()), anzahl);
-        }
-
-        return auftrag;
-    }
-
-    public static void push(ArrayList<LagerItemAnzahlLager> list)
-    {
-        GregorLogik.list = list;
-    }
-
-    public static void main(String[] args)
-    {
-        ReadFile readFile = new ReadFile("export111.csv");
-        ArrayList<String[]> csvFile = readFile.read();
-
-        /*  csvFile.forEach(itemsAndStock ->
-         {
-         Arrays.asList(itemsAndStock).forEach((t) ->
-         {
-         System.out.print(";" + t);
-         });
-         System.out.println("");
-
-         });*/
-        Lagerverwaltung verwaltung = new Lagerverwaltung();
-        lagerHinzufuegen(csvFile, verwaltung);
-        einlagernDerItems(csvFile, verwaltung);
-
-        verwaltung.ausgabe();
-
-        /*   ArrayList<LagerItemAnzahl> einzelAuftraege = verwaltung.lagerAusgleichen(
-         GregorLogik.generiereAuftrag(3, 5)
-         );*/
-        ArrayList<LagerItemAnzahlLager> einzelAuftraege = verwaltung.gleicheItemBestandAus();
-        System.out.println("");
-        // verwaltung.ausgabe();
-
-        einzelAuftraege.sort((e, e2) -> e.von.toString().compareTo(e2.von.toString()));
-
-        //  GregorLogik.list.forEach(System.out::println);
-        einzelAuftraege.forEach(System.out::println);
-
-    }
 
     private static void lagerHinzufuegen(ArrayList<String[]> csvFile, Lagerverwaltung verwaltung)
     {
@@ -127,25 +70,6 @@ public class GregorLogik implements Runnable
         this.frame.setResult(result);
     }
 
-
-    /*public String run(String path) {
-     ReadFile readFile = new ReadFile(path);
-     ArrayList<String[]> csvFile = readFile.read();
-
-     Lagerverwaltung verwaltung = new Lagerverwaltung();
-     lagerHinzufuegen(csvFile, verwaltung);
-     einlagernDerItems(csvFile, verwaltung);
-
-     ArrayList<LagerItemAnzahlLager> einzelAuftraege = verwaltung.gleicheItemBestandAus();
-
-     // einzelAuftraege.sort((e, e2) -> e.von.toString().compareTo(e2.von.toString()));
-     einzelAuftraege.sort((e, e2) -> e.compareTo(e2));
-
-     return einzelAuftraege.stream()
-     .map(e -> e.toString())
-     .collect(Collectors.joining("\n"));
-
-     }*/
     private static void einlagernDerItems(ArrayList<String[]> csvFile, Lagerverwaltung verwaltung)
     {
         csvFile.forEach(e

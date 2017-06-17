@@ -236,6 +236,7 @@ public class NewJFrame extends javax.swing.JFrame implements Runnable
             }
 
         }
+        return;
     }
 
     private void suggestionsActionPerformed(ActionEvent evt)//GEN-FIRST:event_suggestionsActionPerformed
